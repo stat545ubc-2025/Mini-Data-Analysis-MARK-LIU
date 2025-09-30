@@ -1,6 +1,6 @@
 ---
 title: "Mini Data-Analysis Deliverable 1"
-output: html_document
+output: github_document
 ---
 
 # Welcome to your (maybe) first-ever data analysis project!
@@ -84,10 +84,10 @@ And that is exactly the first thing that you will do!
 
 <!-------------------------- Start your work below ---------------------------->
 
-1: CHOICE_1\_HERE\
-2: CHOICE_2\_HERE\
-3: CHOICE_3\_HERE\
-4: CHOICE_4\_HERE
+1: *apt_buildings*\
+2: *building_permits*\
+3: *steam_games*\
+4: *cancer_sample*
 
 <!----------------------------------------------------------------------------->
 
@@ -97,10 +97,151 @@ And that is exactly the first thing that you will do!
 
 <!-------------------------- Start your work below ---------------------------->
 
+## Exploring the Dataset
+
+### steam_games
 ```{r}
-### EXPLORE HERE ###
-steam_games
+#procure basic information
+glimpse(steam_games)
 ```
+
+By inspection, the dataset *steam_games* contains `r nrow(steam_games)` observations and `r ncol(steam_games)` variables of interest. Among the variables, `r sum(sapply(steam_games, is.numeric))` are numerical (*id*, *original_price*, *discount_price*, *achievements*), and the remaining are all encoded as strings. There are also 5 non-numeric variables that contain some numerical information:  *release_date*, *minimum_requirements*, *recommended_requirements*, *recent_reviews*, *all_reviews*.
+
+Moreover, by inspection, at least some (*achievements*, *mature_content*, *discount_price*, *original_Price*) of the variables takes on a value of NA for certain observations.
+
+
+```{r}
+#Segregating the observations with NA
+steam_games_without_NA <- filter(steam_games, complete.cases(steam_games))
+glimpse(steam_games_without_NA)
+```
+
+By filtering for only incomplete observations, we see that the dataset only contains `r nrow(steam_games_without_NA)` games with full data and no missing values, this is not a large number
+
+
+```{r}
+
+#Identify number of NAs in each column
+colSums(is.na(steam_games))
+
+#Find observations with missing names
+steam_games_no_names <- filter(steam_games, is.na(name))
+glimpse(steam_games_no_names)
+```
+
+From the above output, it is clear that the vast majority (around `r mean(sum(sapply(steam_games$mature_content, is.na)), sum(sapply(steam_games$recent_reviews, is.na)))`) of the total 40833 observations have missing values for the *mature_content* and *recent_reviews*. This may not be unreasonable as certain games may contain no mature content and may also have no recent reviews.
+
+A minority (around `r mean(sum(sapply(steam_games$minimum_requirements, is.na)), sum(sapply(steam_games$recommended_requirements, is.na)))`) of the observations have no information on *minimum_requirements* or *recommended_requirements*.
+
+Curiously, there are `r nrow(steam_games_no_names)` games that has a missing value for the *name* variable. Upon a quick inspection of these two rows, it appears from their *url* that these observations are for the general steam store page and steam gift cards and are not games per se.
+
+### cancer_sample
+
+```{r}
+#procure basic information
+glimpse(cancer_sample)
+```
+
+By inspection, the dataset *cancer_sample* contains `r nrow(cancer_sample)` observations and `r ncol(cancer_sample)` variables of interest. Among the variables, `r sum(sapply(cancer_sample, is.numeric))` are numerical. This gives us `r ncol(cancer_sample) - sum(sapply(cancer_sample, is.numeric))` non-numeric variables.
+
+The only non-numerical variable in question is *diagnosis*.
+
+By inspection, there does not appear to be observations with missing values.
+
+```{r}
+#Verify the completeness of data
+number_of_complete_cases <- nrow(filter(cancer_sample, complete.cases(cancer_sample)))
+number_of_complete_cases == nrow(cancer_sample)
+```
+
+Some R code enable us to verify that the *cancer_sample* have `r nrow(cancer_sample) - number_of_complete_cases` rows with missing values.
+
+```{r}
+#Getting the possible outcomes for diagnosis
+unique(cancer_sample$diagnosis)
+
+#Checking the distribution
+counts = count(cancer_sample, diagnosis)
+counts
+```
+
+The only non-numerical variable in the dataset, *diagnosis* is categorical with `r length(unique(cancer_sample$diagnosis))` categories, "M" and "B". These are in reference to the neoplasm being malignant or benign.
+
+There are a total of `r counts[1,2]` benign cases and a total of `r counts[2,2]` malignant cases.
+
+### apt_buildings
+
+```{r}
+#procure basic information
+glimpse(apt_buildings)
+```
+
+By inspection, the dataset *apt_buildings* contains `r nrow(apt_buildings)` observations and `r ncol(apt_buildings)` variables of interest. Among the variables, `r sum(sapply(apt_buildings, is.numeric))` are numerical. This gives us `r ncol(apt_buildings) - sum(sapply(apt_buildings, is.numeric))` non-numeric variables. 
+
+Moreover, most of the non-numeric variables are categorical and appears to only take on the values of "YES" and "NO". These include the variables *sprinkler_system*, *separate_water_meters*, *cooling_room*, and several others. There are also some that do not take on strict categories, such as *site_address*. It is unclear at first glance whether *facilities_available* and *amentities* are categorical or descriptive.
+
+There also appear to be some observations with missing values.
+
+```{r}
+#Segregating the observations with NA
+apt_buildings_without_NA <- filter(apt_buildings, complete.cases(apt_buildings))
+glimpse(apt_buildings_without_NA)
+```
+
+By filtering for only incomplete observations, we see that the dataset only contains `r nrow(apt_buildings_without_NA)` games with full data and no missing values.
+
+```{r}
+#Unique values of amenities
+unique(apt_buildings$amenities)
+amentities_types = length(unique(apt_buildings$amenities))
+```
+It seems that for the *amenities* variable, it can take on a total of `r amentities_types` possible values, including NA. By visually inspecting the output of the code above, it appears that the values of this variable consist of tuple of several unique strings, including *In/Outdoor rec facilities*, *In/Outdoor pool*, *In/Outdoor exercise room*, *Child play area*, and *Sauna*.
+
+### building_permits
+
+```{r}
+#procure basic information
+glimpse(building_permits)
+```
+
+By inspection, the dataset *building_permits* contains `r nrow(building_permits)` observations and `r ncol(building_permits)` variables of interest. Among the variables, `r sum(sapply(building_permits, is.numeric))` are numerical. This gives us `r ncol(building_permits) - sum(sapply(building_permits, is.numeric))` non-numeric variables.
+
+In the output above, the variables *property_use*, *specific_use_category*, and *type_of_work* appears to be categorical whilst the remaining non-numeric variables seem to be descriptive and does not take on finitely many categories.
+
+Moreover, there seems to be a large number of missing values surrounding *project_description*.
+
+```{r}
+#Counting the number of NAs in project description
+project_desc_NA <- sum(sapply(building_permits$project_description, is.na))
+
+#Finding the total number of full observations
+building_permits_without_NA <- filter(building_permits, complete.cases(building_permits))
+glimpse(building_permits_without_NA)
+
+#Finding the total number of full observations, ignoring project_description
+building_permits_without_NA_no_desc <- filter(building_permits[-6], complete.cases(building_permits[-6]))
+glimpse(building_permits_without_NA_no_desc)
+
+```
+
+In particular, `r project_desc_NA` observations do not have a *project_description*. Overall, we have `r nrow(building_permits_without_NA)` full observations.
+
+If we ignore *project_description*, there are `r nrow(building_permits_without_NA_no_desc)` full observations.
+
+```{r}
+#Inspecting projects of value zero
+building_permits_value_0 = filter(building_permits, project_value == 0 | is.na(project_value))
+glimpse(building_permits_value_0)
+
+#Identifying the type_of_work for such projects
+unique(building_permits_value_0$type_of_work)
+counts = count(building_permits_value_0, type_of_work)
+counts
+```
+
+Within this dataset, we also have `r nrow(building_permits_value_0)` projects with a value of 0 or NA. This may be expected for salvage and demolition operations.
+
+Based on the code output above, there are `r length(unique(building_permits_value_0$type_of_work))` types of work for such type of projects. Among these are `r counts[3,2]` instances of new building.
 
 <!----------------------------------------------------------------------------->
 
@@ -108,11 +249,15 @@ steam_games
 
 <!-------------------------- Start your work below ---------------------------->
 
+I will be using the **apt_buildings** dataset, as this dataset contains a relatively large number of column and include a good mix of both categorical and numerical variables, percent being numerical. This is unlike **steam_games** or **cancer_sample** which leans heavily in of the two types. **building_permits**, on the other hand, gives a relatively small number of variables to work with.
+
 <!----------------------------------------------------------------------------->
 
 1.4 **(2 points)** Time for a  final decision! Going back to the beginning, it's important to have an *end goal* in mind. For example, if I had chosen the `titanic` dataset for my project, I might've wanted to explore the relationship between survival and other variables. Try to think of 1 research question that you would want to answer with your dataset. Note it down below.
 
 <!-------------------------- Start your work below ---------------------------->
+
+> How is the building age of an apartment complex related to its amenities, parking spaces, and other features?
 
 <!----------------------------------------------------------------------------->
 
@@ -143,6 +288,156 @@ Make sure that you're using dplyr and ggplot2 rather than base R for this task. 
 
 <!-------------------------- Start your work below ---------------------------->
 
+## 1 Introduction
+
+In this mini data analysis, I will be using the dplyr and ggplot2 to explore the various features of the *apt_buildings* data set. Through visualizing and manipulating the this dataset, I aim to produce 4 possible research questions that may be addressed by this dataset.
+
+### 1.1 Loading the Packages
+
+As stated above, the ggplot2 and the tidyverse packages are required for this analysis. They will be loaded here:
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+```
+
+### 1.2 Data Overview
+
+We will begin by producing a summary of the dataset using both the built-in summary function and via the glimpse function from the tidyverse package (this is just a short recapitulation of task 1)
+```{r}
+glimpse(apt_buildings)
+```
+
+Based on the output of the glimpse function, the dataset has `r nrow(apt_buildings)` rows and `r ncol(apt_buildings)` columns. In the variables represented by the columns, `r sum(sapply(apt_buildings, is.numeric))` are numerical. This gives us a total of `r ncol(apt_buildings) - sum(sapply(apt_buildings, is.numeric))` variables that are not numerical.
+
+It is also clear that some observations have missing values.
+
+### 1.3 The Missing Values (task 3)
+
+Having mentioned that there are numerous missing values in this dataset, we will now try to identity how many missing values there are per variable.
+
+```{r}
+#Create a new tibble that includes the number of NA observations for each column
+missingness <- apt_buildings %>%
+  summarise_all(~ sum(is.na(.)))
+glimpse(missingness)
+```
+
+Using the summarise_all function from dplyr, we have produced a table that documents the number of NAs in each of the variables. In particular, it appears that we have `r missingness$prop_management_company_name` observations with no value for  *prop_management_company_name* and `r missingness$amenities` observations with no information on amenities.
+
+It seems that, among all the variables, only *id, bike_parking, property_type, rsn, site_address, war, no_of_storeys, no_of_units*, and *facilities_available* have 0 missing values. Below, I have included three plots that showcases the number of missing values for each variable.
+
+```{r}
+#Create a new tibble showing the number fo missing variables
+variable <- colnames(missingness)
+number_missing <- data.frame(t(missingness))$t.missingness
+id <- seq(1, length(variable))
+
+missingness_plot <- as_tibble(cbind(id, variable, number_missing))
+missingness_plot <- mutate(missingness_plot, number_missing = as.numeric(number_missing))
+
+#Creating the plots
+missingness_plot[1:12,] %>%
+  ggplot(aes(variable, colour = variable)) +
+  geom_bar(aes(weight = number_missing)) +
+  ylab("Number of missing values Plot 1") +
+  ggtitle("Number of missing values (First 12 variables)") +
+  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) +
+  xlab("Variables") +
+  theme(legend.position="bottom", legend.text = element_text(size = 6.5)) 
+  
+missingness_plot[13:24,] %>%
+  ggplot(aes(variable, colour = variable)) +
+  geom_bar(aes(weight = number_missing)) +
+  ylab("Number of missing values Plot 1") +
+  ggtitle("Number of missing values (Middle 12 variables)") +
+  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) +
+  xlab("Variables") +
+  theme(legend.position="bottom", legend.text = element_text(size = 6.5)) 
+
+missingness_plot[25:37,] %>%
+  ggplot(aes(variable, colour = variable)) +
+  geom_bar(aes(weight = number_missing)) +
+  ylab("Number of missing values Plot 1") +
+  ggtitle("Number of missing values (Last 13 variables)") +
+  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) +
+  xlab("Variables") +
+  theme(legend.position="bottom", legend.text = element_text(size = 6.5))
+
+```
+
+### 1.4 Identifying the building age (task 2)
+
+For the purpose of this analysis, in addition to the number of elevators (*no_of_elevators*), we are also interested in elevator availability, which could be captured by a new variables:
+
+- The number of elevator per unit (elevator_density)
+
+Moreover, we are also interested in the age of the building. Although it is captured by the variable *building age*, it would be best if it is included in a more straight forward manner, which requires yet another new variable:
+
+- The age of the building as of 2025 (building_age)
+
+We will create the new variables using the code below:
+
+```{r}
+#Create a new tibble with the variables mentioned above
+apt_buildings_new <- apt_buildings
+apt_buildings_new <- mutate(apt_buildings_new, elevator_density = 
+                              no_of_elevators / no_of_units, building_age = 
+                              2025 - year_built)
+
+#producing a numerical summary of the new variables
+
+summary(c(apt_buildings_new$building_age))
+summary(c(apt_buildings_new$elevator_density))
+```
+
+### 1.5 Relationship between no_of_storeys and building_age (Task 4)
+
+It is expected that buildings of various age would be built with different features. For example, improvement in engineering technologies and materials enabled the construction of apartments with more storeys. To confirm this intuition, we will make use of a scatter plot between the new variable *building_age* and *no_of_storeys*.
+
+
+```{r}
+#Creating the scatter plot
+
+apt_buildings_new %>% 
+  ggplot(aes(x = building_age, y = no_of_storeys)) +
+  geom_point(size = 0.2, col ="red") +
+  #Adding an ordinary least square line of best fit
+  geom_smooth(method = "lm") +
+  ylim(c(0, 60)) +
+  ggtitle("Building age vs. Number of Storeys") +
+  xlab("Building Age as of 2025") +
+  ylab("Number of Storeys")
+```
+
+Based on the above plot, it is clear that, as building age increases, the number of storeys decreases. Moreover, based on the plot, it is apparent from the density of points that most buildings studied in the dataset were constructed around 40-60 years ago. It also appears that most tall apartments were built either around 50 years ago or after the 2000s.
+
+### 1.6 Distribution of Number of units (Task 1)
+
+Continuing the earlier discussion on the number of storeys. I also suspect that taller buildings ought to be furnished with more sets of elevators. As such, to confirm this, I will be plotting the distribution of *no_of_storeys* across each possible value for *no_of_elevators* in a ridge-plot.
+
+To find the appropriate bins for *no_of_elevators* in the ridge plot, we need to make sure that for each level in *no_of_elevators* we have enough obseravtions to plot a distribution, we will first observe this variable's count.
+
+```{r}
+elevator_count <- count(apt_buildings_new, no_of_elevators)
+glimpse(elevator_count)
+```
+
+From the tibble above, it appears that for buildings with *no_of_elevators* equaling 7, 15, or 32, we only have 1 observation. This will not be sufficient for plotting the distribution. Thus, we will first filter out observations with *no_of_elevators* $\geq 7$
+
+```{r}
+#creatign the box plot
+apt_buildings_new %>% 
+  filter(no_of_elevators <= 6) %>%
+  ggplot(aes(y = as.factor(no_of_elevators), x = no_of_storeys)) +
+  ggridges::geom_density_ridges() +
+  ggtitle("Distribution of Number of Storeys") +
+  xlab("Number of Storeys") +
+  ylab("Number of Elevators")
+```
+
+It appears that the *no_of_storeys* indeed has a different distribution depending on the number of elevators. For example, as the number of elevators increase from 1 to 6, both the mean of *no_of_storeys* and its standard deviation also appear to increase steadily. This does follow from my previous line of reasoning.
+
 <!----------------------------------------------------------------------------->
 
 # Task 3: Choose research questions 
@@ -150,6 +445,14 @@ Make sure that you're using dplyr and ggplot2 rather than base R for this task. 
 **(4 points)** So far, you have chosen a dataset and gotten familiar with it through exploring the data. You have also brainstormed one research question that interested you (Task 1.4).  Now it's time to pick 4 research questions that you would like to explore in Milestone 2! Write the 4 questions and any additional comments below. 
 
 <!--- *****START HERE***** --->
+
+> **Question 1:** What are the most significant factors that influence whether a building would have garbage chutes?
+
+> **Question 2:** In what ways are the availability of car parking spaces and bicycle parking spaces related?
+
+> **Question 3:** Which variables admit a way of effectively predicting whether or not a building has air conditioning?
+
+> **Question 4:** Do larger and more recent buildings have more robust fire safety systems (fire alarm, fire escape, intercom) in place?
 
 <!----------------------------->
 
