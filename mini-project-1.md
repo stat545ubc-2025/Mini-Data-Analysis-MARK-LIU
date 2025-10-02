@@ -1106,7 +1106,7 @@ ridge-plot.
 
 To find the appropriate bins for *no_of_elevators* in the ridge plot, we
 need to make sure that for each level in *no_of_elevators* we have
-enough obseravtions to plot a distribution, we will first observe this
+enough obseravtions to plot a distribution, let us first observe this
 variable’s count.
 
 ``` r

@@ -416,7 +416,7 @@ Based on the above plot, it is clear that, as building age increases, the number
 
 Continuing the earlier discussion on the number of storeys. I also suspect that taller buildings ought to be furnished with more sets of elevators. As such, to confirm this, I will be plotting the distribution of *no_of_storeys* across each possible value for *no_of_elevators* in a ridge-plot.
 
-To find the appropriate bins for *no_of_elevators* in the ridge plot, we need to make sure that for each level in *no_of_elevators* we have enough obseravtions to plot a distribution, we will first observe this variable's count.
+To find the appropriate bins for *no_of_elevators* in the ridge plot, we need to make sure that for each level in *no_of_elevators* we have enough obseravtions to plot a distribution, let us first observe this variable's count.
 
 ```{r}
 elevator_count <- count(apt_buildings_new, no_of_elevators)
