@@ -1229,6 +1229,28 @@ Use the functions `saveRDS()` and `readRDS()`.
 
 <!-------------------------- Start your work below ---------------------------->
 
+``` r
+#creating the R binary file
+saveRDS(ans3.1, here::here("output", "my_model.rsd"))
+
+#loading the R binary file
+ans4.2 <- readRDS(here::here("output", "my_model.rsd"))
+print(ans4.2)
+```
+
+    ## 
+    ## Call:  glm(formula = as.factor(air_conditioning) ~ building_age + no_of_units, 
+    ##     family = binomial(link = "logit"), data = data_Q1)
+    ## 
+    ## Coefficients:
+    ##  (Intercept)  building_age   no_of_units  
+    ##     0.453584     -0.040320      0.001339  
+    ## 
+    ## Degrees of Freedom: 3367 Total (i.e. Null);  3365 Residual
+    ##   (2 observations deleted due to missingness)
+    ## Null Deviance:       2822 
+    ## Residual Deviance: 2584  AIC: 2590
+
 <!----------------------------------------------------------------------------->
 
 # Overall Reproducibility/Cleanliness/Coherence Checklist
