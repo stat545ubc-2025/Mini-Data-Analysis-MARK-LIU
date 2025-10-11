@@ -10,4 +10,4 @@ The purpose of this folder is to contain the source code and other items related
 
 ## Instructions
 
-The mini-project-1.Rmd is the main source code the milestone while the mini-project-1.md file is a knitted version of the aforementioned .Rmd file. The folder mini-project-2_files contain all plots generated for the purpose of this milestone. Please keep in mind that the code chunks within the .Rmd file is designed to be run sequentially, with each segment being executed once.
+The mini-project-1.Rmd is the main source code the milestone while the mini-project-1.md file is a knitted version of the aforementioned .Rmd file. The folder mini-project-1_files contain all plots generated for the purpose of this milestone. Please keep in mind that the code chunks within the .Rmd file is designed to be run sequentially, with each segment being executed once.
