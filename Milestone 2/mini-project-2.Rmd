@@ -649,7 +649,6 @@ Take a summary table that you made from Task 1, and write it as a csv file in yo
 #install.packages("here")
 library(here)
 write.csv(ans1.2.1, here::here("output", "summary_table.csv"), row.names = FALSE)
-
 ```
 
 <!----------------------------------------------------------------------------->
@@ -661,6 +660,15 @@ Write your model object from Task 3 to an R binary file (an RDS), and load it ag
 -   The same robustness and reproducibility criteria as in 4.1 apply here.
 
 <!-------------------------- Start your work below ---------------------------->
+
+```{r}
+#creating the R binary file
+saveRDS(ans3.1, here::here("output", "my_model.rsd"))
+
+#loading the R binary file
+ans4.2 <- readRDS(here::here("output", "my_model.rsd"))
+print(ans4.2)
+```
 
 <!----------------------------------------------------------------------------->
 
