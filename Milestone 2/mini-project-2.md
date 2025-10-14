@@ -1214,7 +1214,7 @@ library(here)
     ## here() starts at /Users/mutianliu/Desktop/Education/UBC/Toolbox Theory 4 (STA545)/R-Projects/Mini Data Analysis
 
 ``` r
-write.csv(ans1.2.1, here::here("output", "summary_table.csv"), row.names = FALSE)
+write_csv(ans1.2.1, here::here("output", "summary_table.csv"))
 ```
 
 <!----------------------------------------------------------------------------->

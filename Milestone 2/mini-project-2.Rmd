@@ -648,7 +648,7 @@ Take a summary table that you made from Task 1, and write it as a csv file in yo
 ```{r}
 #install.packages("here")
 library(here)
-write.csv(ans1.2.1, here::here("output", "summary_table.csv"), row.names = FALSE)
+write_csv(ans1.2.1, here::here("output", "summary_table.csv"))
 ```
 
 <!----------------------------------------------------------------------------->
