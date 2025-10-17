@@ -984,7 +984,9 @@ identification variables (“rsn”, “ward”, “id”, “site_address”,
 “air_conditioning” has a value of NA, 3. Replace “year_built” with
 building_age”, which is easier to interpret 4. Combine the
 “air_conditioning” categories “central air” and “individual_unit”, since
-we are only interested in whether there is AC, not the type of AC
+we are only interested in whether there is AC, not the type of AC 5.
+Make the “air_conditioning” column a factor, set “NO” as the reference
+level.
 
 The following code would create the dataset:
 
@@ -994,15 +996,16 @@ data_Q1 <- apt_buildings_tidy %>%
   filter(air_conditioning != "NA") %>%
   mutate(year_built = 2025 - year_built) %>%
   rename(building_age = year_built) %>%
-  mutate(air_conditioning = ifelse(
-    air_conditioning == "NONE", "NO", "YES"))
+  mutate(air_conditioning = as.factor(ifelse(
+    air_conditioning == "NONE", "NO", "YES"))) %>%
+  mutate(air_conditioning = relevel(air_conditioning, ref = "NO"))
 
 glimpse(data_Q1)
 ```
 
     ## Rows: 3,370
     ## Columns: 39
-    ## $ air_conditioning                 <chr> "NO", "NO", "NO", "NO", "NO", "NO", "…
+    ## $ air_conditioning                 <fct> NO, NO, NO, NO, NO, NO, NO, YES, NO, …
     ## $ balconies                        <chr> "YES", "YES", "YES", "YES", "NO", "NO…
     ## $ barrier_free_accessibilty_entr   <chr> "YES", "NO", "NO", "YES", "NO", "NO",…
     ## $ indoor_bike_parking              <dbl> 0, 0, NA, NA, 12, NA, NA, NA, 0, NA, …

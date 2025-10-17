@@ -532,6 +532,7 @@ Next, we will be performing the following steps:
 2. Filter out selections where "air_conditioning" has a value of NA,
 3. Replace "year_built" with building_age", which is easier to interpret
 4. Combine the "air_conditioning" categories "central air" and "individual_unit", since we are only interested in whether there is AC, not the type of AC
+5. Make the "air_conditioning" column a factor, set "NO" as the reference level.
 
 The following code would create the dataset:
 
@@ -541,8 +542,9 @@ data_Q1 <- apt_buildings_tidy %>%
   filter(air_conditioning != "NA") %>%
   mutate(year_built = 2025 - year_built) %>%
   rename(building_age = year_built) %>%
-  mutate(air_conditioning = ifelse(
-    air_conditioning == "NONE", "NO", "YES"))
+  mutate(air_conditioning = as.factor(ifelse(
+    air_conditioning == "NONE", "NO", "YES"))) %>%
+  mutate(air_conditioning = relevel(air_conditioning, ref = "NO"))
 
 glimpse(data_Q1)
 ```
