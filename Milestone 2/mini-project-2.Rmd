@@ -525,7 +525,7 @@ Now, try to choose a version of your data that you think will be appropriate to 
 <!--------------------------- Start your work below --------------------------->
 #### Dataset for Question 1
 
-For this question, we will be starting with the tidied data-set (see above for that process), since the original data-set's "amenities" and "bike_parking" columns are not encoded property as categorical and numerical variables, respectively. This will make it difficult for us to do predictive modelling.
+For this question, we will be starting with the tidied data-set (see above for that process), since the original data-set's "amenities" and "bike_parking" columns are not encoded property as categorical and numerical variables, respectively. This will make it difficult for us to do predictive modelling. All variables, except for id variables, could be considered predictors of interest. Moreover, some steps have been omitted since the bulk of the cleaning was completed for the previous task.
 
 Next, we will be performing the following steps:
 1. Remove identification variables ("rsn", "ward", "id", "site_address", "prop_management_company_name")
@@ -551,7 +551,7 @@ glimpse(data_Q1)
 
 #### Dataset for Question 2
 
-For this question, we will also be starting with the tidied data-set, since the original dataset's formatting for "bike_parking" does not allow for easy analysis of this variable.
+For this question, we will also be starting with the tidied data-set, since the original dataset's formatting for "bike_parking" does not allow for easy analysis of this variable. Some steps were omitted here as the cleaning process has already turned "bike_parking" into a readable format.
 
 Next, we will be performing the following steps:
 1. Creating a new variable for total bike parking
